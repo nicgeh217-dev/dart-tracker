@@ -1,0 +1,22 @@
+:root {
+  --slate: #232B27;
+  --slate-raised: #2F3934;
+  --chalk: #ECE9DD;
+  --chalk-dim: #9AA397;
+  --red: #C93A2E;
+  --green: #3F8A5A;
+
+  --radius: 8px;
+
+  --font-display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
+  --font-body: 'Instrument Sans', system-ui, sans-serif;
+
+  --size-score-active: 96px;
+  --size-score: 40px;
+  --size-heading: 28px;
+  --size-text: 16px;
+  --size-small: 14px;
+
+  --tap: 48px;
+  --gutter: 16px;
+}
