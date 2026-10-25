@@ -279,3 +279,191 @@ button[aria-pressed='true'] {
   min-height: 56px;
   font-size: 18px;
 }
+
+/* Spielscreen */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.game-title {
+  font-size: var(--size-heading);
+  color: var(--chalk-dim);
+  margin-bottom: 8px;
+}
+
+.scoreboard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.player {
+  padding: 8px 12px;
+  border-radius: var(--radius);
+}
+
+.player.active {
+  background: var(--slate-raised);
+  padding-bottom: 12px;
+}
+
+.player-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.player .name {
+  font-size: 18px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.player .score {
+  font-size: var(--size-score);
+  line-height: 1;
+  color: var(--chalk-dim);
+}
+
+.player.active .score {
+  font-size: var(--size-score-active);
+  color: var(--chalk);
+}
+
+.score.wipe {
+  animation: chalk-wipe 280ms ease-out;
+}
+
+@keyframes chalk-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0.4;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+.turn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.turn .meta {
+  margin-right: auto;
+}
+
+.chip {
+  min-width: 56px;
+  padding: 4px 8px;
+  border: 2px solid var(--chalk-dim);
+  border-radius: var(--radius);
+  text-align: center;
+  font-weight: 600;
+}
+
+.chip.empty {
+  border-style: dashed;
+  border-color: var(--slate-raised);
+  background: var(--slate);
+  min-height: 34px;
+}
+
+.player.active .chip.empty {
+  border-color: var(--chalk-dim);
+  background: transparent;
+  opacity: 0.5;
+}
+
+.marks {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: var(--size-small);
+  color: var(--chalk-dim);
+}
+
+.mark-glyph {
+  font-size: 20px;
+  line-height: 1.1;
+  min-height: 22px;
+  color: var(--chalk);
+}
+
+.mark.m3 .mark-field {
+  text-decoration: line-through;
+}
+
+/* Tastatur */
+.keypad {
+  --key-bg: var(--slate-raised);
+  --key-border: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.keypad[data-multiplier='double'] {
+  --key-bg: color-mix(in srgb, var(--red) 60%, var(--slate));
+  --key-border: var(--red);
+}
+
+.keypad[data-multiplier='triple'] {
+  --key-bg: color-mix(in srgb, var(--green) 60%, var(--slate));
+  --key-border: var(--green);
+}
+
+.keypad .numbers {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.keypad .special {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 8px;
+}
+
+.keypad .field {
+  padding: 0;
+  background: var(--key-bg);
+  border-color: var(--key-border);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.keypad .field.wide {
+  font-size: 18px;
+}
+
+.keypad .undo {
+  border-color: var(--chalk-dim);
+}
+
+.game-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.game-actions button {
+  flex: 1;
+}
