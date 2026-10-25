@@ -225,3 +225,57 @@ input[type='text'] {
   color: var(--chalk-dim);
   font-size: var(--size-small);
 }
+
+/* Neues Spiel */
+.group {
+  margin-bottom: 24px;
+}
+
+.seg {
+  display: flex;
+  gap: 8px;
+}
+
+.seg button {
+  flex: 1;
+}
+
+button[aria-pressed='true'] {
+  background: var(--chalk);
+  border-color: var(--chalk);
+  color: var(--slate);
+  font-weight: 600;
+}
+
+.pick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: var(--slate-raised);
+  border-color: transparent;
+}
+
+.pick[aria-pressed='true'] {
+  background: var(--chalk);
+  border-color: var(--chalk);
+}
+
+.order {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--chalk-dim);
+  border-radius: 50%;
+  font-size: 18px;
+}
+
+.pick[aria-pressed='true'] .order {
+  border-color: var(--slate);
+}
+
+.start {
+  min-height: 56px;
+  font-size: 18px;
+}

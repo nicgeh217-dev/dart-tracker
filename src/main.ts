@@ -7,6 +7,7 @@ import './styles/base.css';
 import { getData, initStore } from './store/store';
 import { el } from './ui/dom';
 import { registerRoutes, setGuard, startRouter } from './ui/router';
+import { newGameScreen } from './ui/screens/newGame';
 import { playersScreen } from './ui/screens/players';
 import { startScreen } from './ui/screens/start';
 
@@ -20,6 +21,7 @@ app.replaceChildren(...(warning ? [el('p', { class: 'banner', role: 'alert' }, w
 registerRoutes({
   '/': startScreen,
   '/players': playersScreen,
+  '/new': newGameScreen,
 });
 
 /** Läuft oder endet gerade ein Spiel, zeigen Start, Neues Spiel und Spielscreens den passenden Screen. */
