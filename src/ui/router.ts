@@ -45,6 +45,7 @@ function render(): void {
   const changed = path !== lastPath;
   lastPath = path;
   root.replaceChildren();
+  root.className = 'screen';
   screen(root, params);
   if (changed) {
     window.scrollTo(0, 0);

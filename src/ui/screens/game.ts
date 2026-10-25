@@ -48,7 +48,11 @@ export const gameScreen: Screen = (root) => {
   const turnStatus = el('p', { class: 'sr-only' }, `${game.playerNames[state.currentPlayerId]} ist dran.`);
   turnStatus.setAttribute('aria-live', 'polite');
 
-  root.append(el('h1', { class: 'game-title' }, title), turnStatus);
+  root.classList.add('game-screen');
+  root.append(
+    el('div', { class: 'game-head' }, el('h1', { class: 'game-title' }, title), el('span', { class: 'round' }, `Runde ${state.round}`)),
+    turnStatus,
+  );
   renderScoreboard(root, game, state);
-  root.append(createKeypad(throwDart, undoDart), actions);
+  root.append(actions, createKeypad(throwDart, undoDart));
 };

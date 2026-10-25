@@ -1,7 +1,4 @@
-import '@fontsource/big-shoulders-display/700';
-import '@fontsource/big-shoulders-display/800';
-import '@fontsource/instrument-sans/400.css';
-import '@fontsource/instrument-sans/600.css';
+import '@fontsource-variable/inter';
 import './styles/tokens.css';
 import './styles/base.css';
 import { getData, getSaveWarning, initStore, subscribe } from './store/store';

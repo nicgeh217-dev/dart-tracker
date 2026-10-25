@@ -6,6 +6,8 @@ import { navigate } from '../router';
 import type { Screen } from '../router';
 
 const MAX_NAME_LENGTH = 20;
+/** nach dem Hinzufügen bleibt der Cursor im Namensfeld, damit man gleich den nächsten Spieler tippen kann */
+let refocusNewPlayer = false;
 
 export const playersScreen: Screen = (root) => {
   let editingId: string | null = null;
@@ -92,12 +94,17 @@ export const playersScreen: Screen = (root) => {
       oninput: () => { pendingName = input.value; },
     });
     input.setAttribute('aria-label', 'Name des neuen Spielers');
+    if (refocusNewPlayer) {
+      refocusNewPlayer = false;
+      queueMicrotask(() => input.focus());
+    }
     const form = el(
       'form',
       {
         class: 'inline-form',
         onsubmit: (e: Event) => {
           e.preventDefault();
+          refocusNewPlayer = true;
           const result = addPlayer(input.value);
           if (result.ok) return;
           addError = result.error;

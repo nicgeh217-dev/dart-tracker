@@ -12,14 +12,18 @@ export const startScreen: Screen = (root) => {
       { class: 'stack menu' },
       el(
         'button',
-        { class: 'primary', onclick: () => navigate(enoughPlayers ? '/new' : '/players') },
+        { class: 'primary big', onclick: () => navigate(enoughPlayers ? '/new' : '/players') },
         'Neues Spiel',
       ),
       enoughPlayers
         ? ''
         : el('p', { class: 'hint' }, 'Für ein Spiel brauchst du mindestens zwei Spieler.'),
-      el('button', { onclick: () => navigate('/players') }, 'Spieler'),
-      el('button', { onclick: () => navigate('/history') }, 'Verlauf'),
+      el(
+        'div',
+        { class: 'grouped' },
+        el('button', { class: 'row-link', onclick: () => navigate('/players') }, 'Spieler'),
+        el('button', { class: 'row-link', onclick: () => navigate('/history') }, 'Verlauf'),
+      ),
     ),
   );
 };

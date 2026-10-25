@@ -1,22 +1,22 @@
 :root {
-  --slate: #232B27;
-  --slate-raised: #2F3934;
-  --chalk: #ECE9DD;
-  --chalk-dim: #9AA397;
-  --red: #C93A2E;
-  --green: #3F8A5A;
+  color-scheme: dark;
 
-  --radius: 8px;
+  --bg: #0E1110;
+  --surface: #1A1F1D;
+  --surface-2: #252B28;
+  --text: #F5F4EF;
+  --text-dim: #8E9490;
+  --cream: #EDE6D3;
+  --red: #E0453A;
+  --green: #34A268;
 
-  --font-display: 'Big Shoulders Display', 'Arial Narrow', sans-serif;
-  --font-body: 'Instrument Sans', system-ui, sans-serif;
+  --r-card: 24px;
+  --r-key: 16px;
+  --r-pill: 999px;
 
-  --size-score-active: 96px;
-  --size-score: 40px;
-  --size-heading: 28px;
-  --size-text: 16px;
-  --size-small: 14px;
+  --font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --tap: 48px;
   --gutter: 16px;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
