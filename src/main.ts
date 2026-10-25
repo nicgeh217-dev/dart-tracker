@@ -4,7 +4,7 @@ import '@fontsource/instrument-sans/400.css';
 import '@fontsource/instrument-sans/600.css';
 import './styles/tokens.css';
 import './styles/base.css';
-import { getData, initStore } from './store/store';
+import { getData, getSaveWarning, initStore, subscribe } from './store/store';
 import { el } from './ui/dom';
 import { registerRoutes, setGuard, startRouter } from './ui/router';
 import { finishedScreen } from './ui/screens/finished';
@@ -19,7 +19,15 @@ if (!app) throw new Error('#app fehlt');
 
 const { warning } = initStore();
 const screenRoot = el('main', { class: 'screen' });
-app.replaceChildren(...(warning ? [el('p', { class: 'banner', role: 'alert' }, warning)] : []), screenRoot);
+const banner = el('p', { class: 'banner', role: 'alert', hidden: true });
+const updateBanner = () => {
+  const message = getSaveWarning() ?? warning;
+  banner.textContent = message ?? '';
+  banner.hidden = message === null;
+};
+subscribe(updateBanner);
+updateBanner();
+app.replaceChildren(banner, screenRoot);
 
 registerRoutes({
   '/': startScreen,

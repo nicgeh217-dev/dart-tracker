@@ -8,6 +8,7 @@ import {
   finishGame,
   getData,
   getGameState,
+  getSaveWarning,
   initStore,
   removePlayer,
   renamePlayer,
@@ -172,6 +173,18 @@ describe('Persistenz und Benachrichtigung', () => {
     resetStoreForTests();
     expect(initStore().warning).toContain('Gespeicherte Daten');
     expect(getData().players).toEqual([]);
+  });
+
+  it('meldet einen Speicherfehler und nimmt die Meldung nach erfolgreichem Speichern zurück', () => {
+    expect(getSaveWarning()).toBeNull();
+    const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new Error('voll');
+    });
+    addPlayer('Mia');
+    expect(getSaveWarning()).toContain('nicht gespeichert');
+    spy.mockRestore();
+    addPlayer('Tom');
+    expect(getSaveWarning()).toBeNull();
   });
 
   it('benachrichtigt Abonnenten bei Änderungen bis zum Abmelden', () => {

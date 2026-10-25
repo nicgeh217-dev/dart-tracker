@@ -17,8 +17,10 @@ export type Result<T> = { ok: true; value: T } | { ok: false; error: string };
 
 const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 8;
+const SAVE_WARNING = 'Änderungen konnten nicht gespeichert werden. Der Speicher ist voll oder gesperrt.';
 
 let data: AppData = emptyData();
+let saveWarning: string | null = null;
 const listeners = new Set<() => void>();
 
 function newId(): string {
@@ -26,7 +28,7 @@ function newId(): string {
 }
 
 function commit(): void {
-  saveData(data);
+  saveWarning = saveData(data) ? null : SAVE_WARNING;
   listeners.forEach((fn) => fn());
 }
 
@@ -38,7 +40,13 @@ export function initStore(): { warning: string | null } {
 
 export function resetStoreForTests(): void {
   data = emptyData();
+  saveWarning = null;
   listeners.clear();
+}
+
+/** Hinweis, solange das letzte Speichern fehlgeschlagen ist. */
+export function getSaveWarning(): string | null {
+  return saveWarning;
 }
 
 export function getData(): AppData {
