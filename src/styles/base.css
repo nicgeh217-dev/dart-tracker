@@ -467,3 +467,81 @@ button[aria-pressed='true'] {
 .game-actions button {
   flex: 1;
 }
+
+/* Ende und Verlauf */
+.result {
+  font-size: 56px;
+  font-weight: 800;
+  margin: 4px 0 20px;
+  overflow-wrap: anywhere;
+}
+
+.result.winner {
+  color: var(--green);
+}
+
+.summary {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.summary th,
+.summary td {
+  padding: 10px 8px;
+  text-align: right;
+  border-bottom: 1px solid var(--slate-raised);
+}
+
+.summary th:first-child {
+  text-align: left;
+  font-weight: 600;
+}
+
+.summary thead th {
+  color: var(--chalk-dim);
+  font-size: var(--size-small);
+  font-weight: 400;
+}
+
+.summary .num {
+  font-size: 20px;
+}
+
+.summary .winner-row th:first-child {
+  border-left: 4px solid var(--green);
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 0 8px;
+  border: 2px solid var(--green);
+  border-radius: var(--radius);
+  font-size: var(--size-small);
+  font-weight: 600;
+}
+
+.detail-line {
+  margin-top: 4px;
+}
+
+.history-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  background: var(--slate-raised);
+  border-color: transparent;
+}
+
+.history-item strong {
+  font-size: 18px;
+}
+
+.history-item:active {
+  background: var(--slate);
+}

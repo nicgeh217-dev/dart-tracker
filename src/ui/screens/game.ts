@@ -22,7 +22,11 @@ export const gameScreen: Screen = (root) => {
   const actions = el('div', { class: 'game-actions' });
   if (mode === 'free') {
     actions.append(
-      el('button', { onclick: () => finishGame(freeLeader(state)) }, 'Spiel beenden'),
+      el(
+        'button',
+        { onclick: () => confirm('Spiel beenden? Es gewinnt, wer die meisten Punkte hat.') && finishGame(freeLeader(state)) },
+        'Spiel beenden',
+      ),
     );
   }
   actions.append(

@@ -22,3 +22,13 @@ export function plural(n: number, one: string, many: string): string {
 export function formatAverage(avg: number): string {
   return avg.toFixed(1).replace('.', ',');
 }
+
+export function formatDate(ms: number): string {
+  return new Date(ms).toLocaleString('de-DE', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
