@@ -827,6 +827,7 @@ button.big {
 
 .fx-float {
   position: fixed;
+  transform: translate(-50%, -50%);
   color: var(--cream);
   font-size: 28px;
   font-weight: 800;
@@ -864,11 +865,12 @@ button.big {
   100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
 }
 
-.ring.glow-green { animation: glow-green 400ms ease-out; }
-.ring.glow-red { animation: glow-red 400ms ease-out; }
-.ring.glow-cream { animation: glow-cream 400ms ease-out; }
-.ring.shake { animation: shake 400ms ease-in-out; }
+.glow-green { animation: glow-green 400ms ease-out; }
+.glow-red { animation: glow-red 400ms ease-out; }
+.glow-cream { animation: glow-cream 400ms ease-out; }
+.shake { animation: shake 400ms ease-in-out; }
 .ring.flash-bad { box-shadow: 0 0 0 3px var(--red); border-radius: 50%; }
+.mini.flash-bad { box-shadow: 0 0 0 3px var(--red); }
 
 @keyframes glow-green {
   0% { filter: drop-shadow(0 0 0 var(--green)); }

@@ -1,10 +1,10 @@
 import { describeThrow } from '../../game/events';
 import { freeLeader } from '../../game/free';
 import { getMode } from '../../game/modes';
-import { sideName, sidesOf } from '../../game/sides';
+import { sideName, sideOf, sidesOf } from '../../game/sides';
 import { abortGame, finishGame, getData, getGameState, throwDart, undoDart } from '../../store/store';
 import { createKeypad } from '../components/keypad';
-import { renderScoreboard } from '../components/scoreboard';
+import { effectTarget, renderScoreboard } from '../components/scoreboard';
 import { consumeDraw, showDrawOverlay } from '../draw';
 import { playEffects, takeOrigin } from '../fx';
 import { el } from '../dom';
@@ -75,7 +75,7 @@ export const gameScreen: Screen = (root) => {
   if (added) {
     const lastDart = game.darts[game.darts.length - 1];
     const before = getMode(mode).computeState(game.config, game.darts.slice(0, -1));
-    playEffects(describeThrow(game.config, before, lastDart, state), { mode, ring: root.querySelector('.ring'), origin });
+    playEffects(describeThrow(game.config, before, lastDart, state), { mode, ring: effectTarget(root, sideOf(game.config, lastDart.playerId), state.currentSideId), origin });
   }
 
   if (game.darts.length === 0 && consumeDraw()) {

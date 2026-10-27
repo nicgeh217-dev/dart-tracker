@@ -13,6 +13,12 @@ const lastShown = new Map<string, number>();
 /** zuletzt angezeigte Marks je Spiel, Seite und Feld, damit neu geschlossene Felder eingestempelt werden */
 const lastMarks = new Map<string, number>();
 
+/** Ziel der Effekte: der Ring des Werfers, oder seine Mini-Karte, wenn seine Aufnahme den Wurf beendet hat. */
+export function effectTarget(root: ParentNode, throwerSideId: string, currentSideId: string): Element | null {
+  if (throwerSideId === currentSideId) return root.querySelector('.ring');
+  return Array.from(root.querySelectorAll('.mini')).find((m) => (m as HTMLElement).dataset.side === throwerSideId) ?? null;
+}
+
 export interface BoardOptions {
   /** genau ein Dart kam dazu */
   animate?: boolean;
@@ -81,6 +87,7 @@ export function renderScoreboard(root: HTMLElement, game: Game, state: GameState
       el('span', { class: 'name' }, sideName(game, p.sideId)),
       scoreElement(game, p),
     );
+    card.dataset.side = p.sideId;
     if (cricket) card.append(marksRow(game.id, p, true, animate));
     strip.append(card);
   }
