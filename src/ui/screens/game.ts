@@ -1,7 +1,9 @@
 import { freeLeader } from '../../game/free';
+import { sideName, sidesOf } from '../../game/sides';
 import { abortGame, finishGame, getData, getGameState, throwDart, undoDart } from '../../store/store';
 import { createKeypad } from '../components/keypad';
 import { renderScoreboard } from '../components/scoreboard';
+import { consumeDraw, showDrawOverlay } from '../draw';
 import { el } from '../dom';
 import { MODE_LABELS } from '../labels';
 import { navigate } from '../router';
@@ -55,4 +57,9 @@ export const gameScreen: Screen = (root) => {
   );
   renderScoreboard(root, game, state);
   root.append(actions, createKeypad(throwDart, undoDart));
+
+  if (game.darts.length === 0 && consumeDraw()) {
+    const names = sidesOf(game.config).map((s) => sideName(game, s.id));
+    showDrawOverlay(names, game.config.teams ? 'beginnen' : 'beginnt', () => {});
+  }
 };
