@@ -1,6 +1,7 @@
 import type { Field, Multiplier } from '../../game/types';
 import { isValidDart } from '../../game/types';
 import { el } from '../dom';
+import { rememberOrigin } from '../fx';
 
 const MULTIPLIERS: { label: string; value: Multiplier; key: string }[] = [
   { label: 'Single', value: 1, key: 'single' },
@@ -25,7 +26,7 @@ export function createKeypad(
   switcher.setAttribute('aria-label', 'Multiplikator');
 
   const fieldButton = (label: string, field: Field, extraClass = ''): HTMLButtonElement => {
-    const button = el('button', { type: 'button', class: `field ${extraClass}`.trim(), onclick: () => press(field) }, label);
+    const button: HTMLButtonElement = el('button', { type: 'button', class: `field ${extraClass}`.trim(), onclick: () => press(field, button) }, label);
     fieldButtons.push({ button, field });
     return button;
   };
@@ -51,11 +52,12 @@ export function createKeypad(
     for (const { button, field } of fieldButtons) button.disabled = !isValidDart(field, multiplier);
   }
 
-  function press(field: Field) {
+  function press(field: Field, source: Element) {
     const used = multiplier;
     multiplier = 1;
     update();
     navigator.vibrate?.(HAPTIC_MS);
+    rememberOrigin(source);
     onDart(field, used);
   }
 

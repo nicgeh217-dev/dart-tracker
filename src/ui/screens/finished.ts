@@ -1,11 +1,16 @@
 import { sideName } from '../../game/sides';
 import { rematchConfig } from '../../game/start';
 import { closeGame, getData, startGame, undoDart } from '../../store/store';
+import { playEffects } from '../fx';
 import { renderSummary } from '../components/summary';
 import { el } from '../dom';
 import { MODE_LABELS } from '../labels';
 import { navigate } from '../router';
 import type { Screen } from '../router';
+
+/** Spiele, deren Sieg schon gefeiert wurde (Spiel-ID und Endzeit) */
+const celebrated = new Set<string>();
+const CELEBRATE_WITHIN_MS = 5000;
 
 export const finishedScreen: Screen = (root) => {
   const game = getData().activeGame;
@@ -22,6 +27,13 @@ export const finishedScreen: Screen = (root) => {
     closeGame();
     startGame(config);
   };
+
+  // nur direkt nach dem Gewinn-Dart feiern, nicht nach Neuladen oder erneutem Öffnen
+  const key = `${game.id}:${game.finishedAt}`;
+  if (winner && !celebrated.has(key) && Date.now() - game.finishedAt < CELEBRATE_WITHIN_MS) {
+    celebrated.add(key);
+    playEffects([{ kind: 'win' }], { mode: game.config.mode, ring: null, origin: null });
+  }
 
   const buttons = [el('button', { class: 'primary', onclick: rematch }, 'Revanche')];
   if (game.config.mode !== 'free') {
