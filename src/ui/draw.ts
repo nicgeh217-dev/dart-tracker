@@ -1,3 +1,5 @@
+import { motionAllowed } from './fx';
+
 /** Ob beim nächsten Rendern des Spielscreens die Auslosung „Wer beginnt?“ gezeigt wird. Nur im Speicher, nie gespeichert. */
 let armed = false;
 
@@ -17,10 +19,6 @@ const FIRST_DELAY = 50;
 const LAST_DELAY = 170;
 const HIGHLIGHT_MS = 700;
 const REDUCED_MS = 1200;
-
-function reducedMotion(): boolean {
-  return typeof window.matchMedia !== 'function' || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
 
 /** Reihenfolge der Namen, die das Glücksrad zeigt. Endet beim Gewinner, nie derselbe Index zweimal hintereinander. */
 export function drawSequence(count: number, winnerIndex: number, steps = STEPS): number[] {
@@ -61,7 +59,7 @@ export function showDrawOverlay(names: string[], verb: 'beginnt' | 'beginnen', o
   };
   overlay.addEventListener('click', finish);
 
-  if (reducedMotion() || names.length < 2) {
+  if (!motionAllowed() || names.length < 2) {
     showWinner(REDUCED_MS);
     return overlay;
   }
