@@ -16,6 +16,8 @@ export interface GameConfig {
   mode: ModeId;
   playerIds: string[];
   x01?: { start: 301 | 501; doubleOut: boolean };
+  /** 2 gegen 2: teams[0] beginnt, playerIds ist die Wurfreihenfolge */
+  teams?: [string[], string[]];
 }
 
 export interface PlayerState {
