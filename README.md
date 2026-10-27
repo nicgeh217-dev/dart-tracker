@@ -3,6 +3,9 @@
 Webapp zum Mitschreiben von Darts-Spielen am Dartboard, gebaut fürs Handy. Läuft offline, speichert alles im Browser und braucht kein Konto.
 
 - **Spielmodi:** X01 (301/501, optional Double-Out), Cricket, Frei
+- **Teams:** 2 gegen 2 in allen Modi mit gemeinsamem Stand je Team. Wurfreihenfolge: Team 1, Team 2, Team 1, Team 2
+- **Zufälliger Start:** Auslosung mit „Wer beginnt?“-Animation. Bei Teams immer, bei Einzelspielen per Schalter
+- **Animationen:** Punkte fliegen zum Ring, Leuchten bei Double, Triple und Bull, Wackeln bei Bust, Banner und Konfetti bei 180 und Sieg. Bei „Bewegung reduzieren“ im System sind sie aus
 - **Eingabe:** Dart für Dart, mit Rückgängig
 - **Spieler:** 2 bis 8 pro Spiel, mit Statistik (Spiele, Siege, Schnitt pro Runde)
 - **Verlauf:** alle beendeten Spiele mit Rundenstatistik
