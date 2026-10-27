@@ -1,5 +1,7 @@
+import { buildTeamOrder } from '../../game/sides';
 import type { ModeId } from '../../game/types';
 import { getData, startGame } from '../../store/store';
+import { armDraw } from '../draw';
 import { el } from '../dom';
 import { navigate } from '../router';
 import type { Screen } from '../router';
@@ -11,6 +13,7 @@ const MODES: { id: ModeId; label: string }[] = [
 ];
 const MIN_PLAYERS = 2;
 const MAX_PLAYERS = 8;
+const TEAM_PLAYERS = 4;
 
 function toggle(label: string, pressed: boolean, onclick: () => void): HTMLButtonElement {
   const button = el('button', { type: 'button', onclick }, label);
@@ -23,10 +26,15 @@ export const newGameScreen: Screen = (root) => {
   let start: 301 | 501 = 501;
   let doubleOut = false;
   let selected: string[] = [];
+  let teams = false;
+  let randomStart = false;
 
   const draw = () => {
     const { players } = getData();
-    const ready = selected.length >= MIN_PLAYERS && selected.length <= MAX_PLAYERS;
+    const maxPlayers = teams ? TEAM_PLAYERS : MAX_PLAYERS;
+    const ready = teams
+      ? selected.length === TEAM_PLAYERS
+      : selected.length >= MIN_PLAYERS && selected.length <= MAX_PLAYERS;
 
     const modeGroup = el(
       'div',
@@ -58,22 +66,32 @@ export const newGameScreen: Screen = (root) => {
         {
           type: 'button',
           class: 'pick',
-          disabled: !isSelected && selected.length >= MAX_PLAYERS,
+          disabled: !isSelected && selected.length >= maxPlayers,
           onclick: () => {
             selected = isSelected ? selected.filter((id) => id !== player.id) : [...selected, player.id];
             draw();
           },
         },
         el('span', { class: 'num order' }, isSelected ? String(position + 1) : ''),
-        player.name,
+        el('span', { class: 'pick-name' }, player.name),
+        teams && isSelected ? el('span', { class: 'meta team-tag' }, position < 2 ? 'Team 1' : 'Team 2') : '',
       );
       button.setAttribute('aria-pressed', String(isSelected));
       return button;
     });
 
+    const teamToggle = toggle('Teams (2 gegen 2)', teams, () => {
+      teams = !teams;
+      if (teams) selected = selected.slice(0, TEAM_PLAYERS);
+      draw();
+    });
+    const randomToggle = toggle('Zufälliger Start', teams || randomStart, () => { randomStart = !randomStart; draw(); });
+    randomToggle.disabled = teams;
+
     root.replaceChildren(
       el('div', { class: 'screen-head' }, el('button', { class: 'back', onclick: () => navigate('/') }, 'Zurück'), el('h1', {}, 'Neues Spiel')),
       el('section', { class: 'stack group' }, el('h2', {}, 'Modus'), modeGroup, x01Options),
+      el('section', { class: 'stack group' }, el('h2', {}, 'Optionen'), teamToggle, randomToggle),
       el(
         'section',
         { class: 'stack group' },
@@ -86,18 +104,25 @@ export const newGameScreen: Screen = (root) => {
       el(
         'div',
         { class: 'stack group' },
-        ready ? '' : el('p', { class: 'hint' }, 'Wähle 2 bis 8 Spieler.'),
+        ready ? '' : el('p', { class: 'hint' }, teams ? 'Wähle 4 Spieler für 2 gegen 2.' : 'Wähle 2 bis 8 Spieler.'),
         el(
           'button',
           {
             class: 'primary start',
             disabled: !ready,
             onclick: () => {
-              startGame({
-                mode,
-                playerIds: selected,
-                ...(mode === 'x01' ? { x01: { start, doubleOut } } : {}),
-              });
+              const pairs: [string[], string[]] = [selected.slice(0, 2), selected.slice(2, 4)];
+              const draws = teams || randomStart;
+              startGame(
+                {
+                  mode,
+                  playerIds: teams ? buildTeamOrder(pairs) : selected,
+                  ...(teams ? { teams: pairs } : {}),
+                  ...(mode === 'x01' ? { x01: { start, doubleOut } } : {}),
+                },
+                { randomStart: draws },
+              );
+              if (draws) armDraw();
               navigate('/game');
             },
           },

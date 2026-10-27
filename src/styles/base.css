@@ -346,6 +346,14 @@ button.big {
   text-align: left;
 }
 
+.pick-name {
+  flex: 1;
+}
+
+.team-tag {
+  font-size: 13px;
+}
+
 .order {
   display: inline-grid;
   place-items: center;
