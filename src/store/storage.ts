@@ -1,4 +1,5 @@
 import { getMode } from '../game/modes';
+import { isValidTeamConfig } from '../game/sides';
 import { isValidDart } from '../game/types';
 import type { AppData, Dart, Field, Game, GameConfig, ModeId, Multiplier, Player } from '../game/types';
 
@@ -20,6 +21,7 @@ function isPlayer(v: unknown): v is Player {
 function isConfig(c: unknown): c is GameConfig {
   if (!isRecord(c) || !isString(c.mode) || !MODES.includes(c.mode)) return false;
   if (!Array.isArray(c.playerIds) || c.playerIds.length < 2 || !c.playerIds.every(isString)) return false;
+  if (c.teams !== undefined && !isValidTeamConfig(c as unknown as GameConfig)) return false;
   if (c.mode !== 'x01') return true;
   const x = c.x01;
   return isRecord(x) && (x.start === 301 || x.start === 501) && typeof x.doubleOut === 'boolean';

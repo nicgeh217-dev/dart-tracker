@@ -1,4 +1,6 @@
 import { getMode } from '../game/modes';
+import { isValidTeamConfig } from '../game/sides';
+import { drawStart } from '../game/start';
 import { isValidDart } from '../game/types';
 import type {
   AppData,
@@ -101,9 +103,17 @@ export function removePlayer(id: string): Result<null> {
   return { ok: true, value: null };
 }
 
-export function startGame(config: GameConfig): Game {
+export interface StartOptions {
+  randomStart?: boolean;
+  random?: () => number;
+}
+
+export function startGame(input: GameConfig, options: StartOptions = {}): Game {
+  const config = options.randomStart ? drawStart(input, options.random) : input;
   const ids = config.playerIds;
-  if (ids.length < MIN_PLAYERS || ids.length > MAX_PLAYERS || new Set(ids).size !== ids.length) {
+  if (config.teams) {
+    if (!isValidTeamConfig(config)) throw new Error('Ein Team-Spiel braucht genau 4 Spieler in zwei Teams.');
+  } else if (ids.length < MIN_PLAYERS || ids.length > MAX_PLAYERS || new Set(ids).size !== ids.length) {
     throw new Error(`Ein Spiel braucht ${MIN_PLAYERS} bis ${MAX_PLAYERS} verschiedene Spieler.`);
   }
   if (data.activeGame) throw new Error('Es läuft bereits ein Spiel.');
