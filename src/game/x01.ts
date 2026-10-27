@@ -1,4 +1,5 @@
-import { TurnCursor, newPlayerState } from './turns';
+import { sideOf } from './sides';
+import { TurnCursor, mirrorSides, newPlayerState, newSides } from './turns';
 import { dartPoints } from './types';
 import type { Dart, GameConfig, GameMode, GameState } from './types';
 
@@ -12,6 +13,7 @@ export const x01Mode: GameMode = {
   computeState(config: GameConfig, darts: Dart[]): GameState {
     const { start, doubleOut } = config.x01 ?? { start: 501, doubleOut: false };
     const players = config.playerIds.map((id) => newPlayerState(id, start));
+    const sides = newSides(config, start);
     const cursor = new TurnCursor(config.playerIds);
     let winnerId: string | null = null;
     let bust = false;
@@ -22,36 +24,40 @@ export const x01Mode: GameMode = {
       if (winnerId) break;
       cursor.expect(d);
       const p = players[cursor.index];
+      const side = sides.find((s) => s.sideId === sideOf(config, d.playerId))!;
       bust = false;
       if (cursor.isFirstDart) {
-        turnStartScore = p.score;
+        turnStartScore = side.score;
         turnPoints = 0;
         p.turnsPlayed++;
       }
       cursor.add(d);
 
       const points = dartPoints(d);
-      const rest = p.score - points;
+      const rest = side.score - points;
       if (isBust(rest, d, doubleOut)) {
-        p.score = turnStartScore;
+        side.score = turnStartScore;
         p.pointsScored -= turnPoints;
         bust = true;
         cursor.endTurn();
         continue;
       }
-      p.score = rest;
+      side.score = rest;
       p.pointsScored += points;
       turnPoints += points;
       if (rest === 0) {
-        winnerId = p.playerId;
+        winnerId = side.sideId;
       } else if (cursor.isFull) {
         cursor.endTurn();
       }
     }
 
+    mirrorSides(players, sides);
     return {
       players,
+      sides,
       currentPlayerId: cursor.playerId,
+      currentSideId: sideOf(config, cursor.playerId),
       turnDarts: cursor.darts,
       round: cursor.round,
       winnerId,

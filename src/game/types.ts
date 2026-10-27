@@ -32,13 +32,28 @@ export interface PlayerState {
   turnsPlayed: number;
 }
 
+/** Stand einer Seite (Einzelspieler oder Team) */
+export interface SideState {
+  sideId: string;
+  playerIds: string[];
+  /** X01: Rest, Cricket: Punkte, Frei: Summe */
+  score: number;
+  /** nur Cricket: Felder 15–20 und 25, je 0–3 */
+  marks: Record<number, number>;
+}
+
 export interface GameState {
   players: PlayerState[];
+  /** in Startreihenfolge */
+  sides: SideState[];
   currentPlayerId: string;
+  /** Seite des Werfers */
+  currentSideId: string;
   /** Darts der laufenden Runde */
   turnDarts: Dart[];
   /** 1-basiert */
   round: number;
+  /** Seiten-ID des Siegers (Einzelspiel: Spieler-ID) */
   winnerId: string | null;
   /** der letzte Dart hat die Runde als Bust beendet */
   bust: boolean;
