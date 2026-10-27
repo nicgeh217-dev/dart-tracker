@@ -1,4 +1,5 @@
 import { getMode } from './modes';
+import { sideOf } from './sides';
 import type { Game } from './types';
 
 export interface PlayerStats {
@@ -16,7 +17,7 @@ export function playerStats(playerId: string, games: Game[]): PlayerStats {
   for (const game of games) {
     if (game.finishedAt === null || !game.config.playerIds.includes(playerId)) continue;
     played++;
-    if (game.winnerId === playerId) wins++;
+    if (sideOf(game.config, playerId) === game.winnerId) wins++;
     if (game.config.mode === 'cricket') continue;
     const state = getMode(game.config.mode).computeState(game.config, game.darts);
     const p = state.players.find((s) => s.playerId === playerId);
