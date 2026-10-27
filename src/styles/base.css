@@ -715,6 +715,20 @@ button.big {
   font-weight: 500;
 }
 
+.summary .team-row th {
+  background: var(--surface-2);
+  text-align: left;
+}
+
+.summary .member {
+  padding-left: 28px;
+  font-weight: 500;
+}
+
+.thrower {
+  margin-top: -4px;
+}
+
 .summary .num {
   font-size: 19px;
 }

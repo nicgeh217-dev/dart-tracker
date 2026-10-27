@@ -1,3 +1,5 @@
+import { sideName } from '../../game/sides';
+import { rematchConfig } from '../../game/start';
 import { closeGame, getData, startGame, undoDart } from '../../store/store';
 import { renderSummary } from '../components/summary';
 import { el } from '../dom';
@@ -12,14 +14,13 @@ export const finishedScreen: Screen = (root) => {
     return;
   }
 
-  const winner = game.winnerId ? game.playerNames[game.winnerId] : null;
+  const winner = game.winnerId ? sideName(game, game.winnerId) : null;
+  const verb = game.config.teams ? 'gewinnen' : 'gewinnt';
 
   const rematch = () => {
-    const { config } = game;
-    // der erste Spieler rückt ans Ende, damit die Startreihenfolge wechselt
-    const playerIds = [...config.playerIds.slice(1), config.playerIds[0]];
+    const config = rematchConfig(game.config);
     closeGame();
-    startGame({ ...config, playerIds });
+    startGame(config);
   };
 
   const buttons = [el('button', { class: 'primary', onclick: rematch }, 'Revanche')];
@@ -41,7 +42,7 @@ export const finishedScreen: Screen = (root) => {
 
   root.append(
     el('p', { class: 'meta' }, MODE_LABELS[game.config.mode]),
-    el('h1', { class: winner ? 'result winner' : 'result' }, winner ? `${winner} gewinnt` : 'Spiel beendet'),
+    el('h1', { class: winner ? 'result winner' : 'result' }, winner ? `${winner} ${verb}` : 'Spiel beendet'),
     renderSummary(game),
     el('div', { class: 'stack end-actions' }, ...buttons),
   );

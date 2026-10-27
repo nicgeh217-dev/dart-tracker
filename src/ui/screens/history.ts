@@ -1,3 +1,4 @@
+import { sideName, sidesOf } from '../../game/sides';
 import type { Game } from '../../game/types';
 import { getData } from '../../store/store';
 import { renderSummary } from '../components/summary';
@@ -12,11 +13,15 @@ function gameTitle(game: Game): string {
 }
 
 function playerList(game: Game): string {
+  if (game.config.teams) {
+    const [t0, t1] = sidesOf(game.config);
+    return `${sideName(game, t0.id)} gegen ${sideName(game, t1.id)}`;
+  }
   return game.config.playerIds.map((id) => game.playerNames[id]).join(', ');
 }
 
 function winnerLine(game: Game): string {
-  return game.winnerId ? `Sieger: ${game.playerNames[game.winnerId]}` : 'Kein Sieger';
+  return game.winnerId ? `Sieger: ${sideName(game, game.winnerId)}` : 'Kein Sieger';
 }
 
 function detail(root: HTMLElement, id: string): void {

@@ -1,7 +1,8 @@
 import { CRICKET_FIELDS } from '../../game/cricket';
 import { playerProgress } from '../../game/progress';
+import { sideName } from '../../game/sides';
 import { DARTS_PER_TURN } from '../../game/turns';
-import type { Game, GameState, PlayerState } from '../../game/types';
+import type { Game, GameState, SideState } from '../../game/types';
 import { el } from '../dom';
 import { formatDart } from '../labels';
 import { createRing } from './ring';
@@ -10,7 +11,7 @@ const MARK_GLYPHS = ['', '/', '✕', '⊗'];
 /** zuletzt angezeigter Stand je Spieler, damit nur geänderte Ziffern einrollen */
 const lastShown = new Map<string, number>();
 
-function marksRow(p: PlayerState, compact = false): HTMLElement {
+function marksRow(p: SideState, compact = false): HTMLElement {
   const fieldName = (f: number) => (f === 25 ? 'Bull' : String(f));
   return el(
     'div',
@@ -38,8 +39,8 @@ function turnRow(state: GameState): HTMLElement {
 }
 
 /** Setzt die Klasse „roll“, wenn sich der Stand seit der letzten Anzeige geändert hat. */
-function scoreElement(game: Game, p: PlayerState, extraClass = ''): HTMLElement {
-  const key = `${game.id}:${p.playerId}`;
+function scoreElement(game: Game, p: SideState, extraClass = ''): HTMLElement {
+  const key = `${game.id}:${p.sideId}`;
   const previous = lastShown.get(key);
   lastShown.set(key, p.score);
   const classes = ['num', 'score', extraClass];
@@ -48,12 +49,13 @@ function scoreElement(game: Game, p: PlayerState, extraClass = ''): HTMLElement 
 }
 
 export function renderScoreboard(root: HTMLElement, game: Game, state: GameState): void {
-  const { players, currentPlayerId } = state;
-  const activeIndex = players.findIndex((p) => p.playerId === currentPlayerId);
-  const active = players[activeIndex];
+  const { sides, currentSideId } = state;
+  const activeIndex = sides.findIndex((s) => s.sideId === currentSideId);
+  const active = sides[activeIndex];
   // wer als Nächstes dran ist, steht vorn
-  const others = [...players.slice(activeIndex + 1), ...players.slice(0, activeIndex)];
+  const others = [...sides.slice(activeIndex + 1), ...sides.slice(0, activeIndex)];
   const cricket = game.config.mode === 'cricket';
+  const team = game.config.teams !== undefined;
 
   const strip = el('div', { class: 'strip', role: 'list' });
   strip.setAttribute('aria-label', 'Weitere Spieler');
@@ -61,7 +63,7 @@ export function renderScoreboard(root: HTMLElement, game: Game, state: GameState
     const card = el(
       'div',
       { class: 'mini', role: 'listitem' },
-      el('span', { class: 'name' }, game.playerNames[p.playerId]),
+      el('span', { class: 'name' }, sideName(game, p.sideId)),
       scoreElement(game, p),
     );
     if (cricket) card.append(marksRow(p, true));
@@ -77,17 +79,18 @@ export function renderScoreboard(root: HTMLElement, game: Game, state: GameState
   }
 
   const score = scoreElement(game, active, String(active.score).length >= 4 ? 'long' : '');
-  const progress = playerProgress(game.config, state, active.playerId);
+  const progress = playerProgress(game.config, state, active.sideId);
   const ring = el(
     'div',
     { class: 'ring' },
-    createRing(`${game.id}:${active.playerId}`, progress),
+    createRing(`${game.id}:${active.sideId}`, progress),
     score,
   );
   const card = el(
     'section',
     { class: 'active-card' },
-    el('span', { class: 'active-name' }, game.playerNames[active.playerId]),
+    el('span', { class: 'active-name' }, sideName(game, active.sideId)),
+    team ? el('span', { class: 'meta thrower' }, `${game.playerNames[state.currentPlayerId]} wirft`) : '',
     ring,
   );
   card.setAttribute('aria-label', 'Aktueller Spieler');
